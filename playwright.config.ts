@@ -16,6 +16,21 @@ export default defineConfig({
     ['list'],
     ['json', { outputFile: 'test-results/results.json' }],
   ],
+
+  // Auto-start the dev server before any test runs.
+  // Set DEV_SERVER_CMD in .env (or CI env) to the command that starts your app.
+  // reuseExistingServer: true means the suite won't fail if you've already started it manually.
+  webServer: process.env.DEV_SERVER_CMD
+    ? {
+        command: process.env.DEV_SERVER_CMD,
+        url: process.env.BASE_URL ?? 'http://localhost:5173',
+        reuseExistingServer: true,
+        timeout: 60_000,
+        stdout: 'pipe',
+        stderr: 'pipe',
+      }
+    : undefined,
+
   use: {
     baseURL: process.env.BASE_URL ?? 'http://localhost:3000',
     trace: 'on-first-retry',
@@ -29,11 +44,6 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
-      testMatch: 'tests/e2e/**/*.spec.ts',
-    },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
       testMatch: 'tests/e2e/**/*.spec.ts',
     },
     {

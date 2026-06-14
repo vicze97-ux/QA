@@ -46,6 +46,32 @@ playwright.config.ts
 - **Test data must always be cleaned up.** Any data created by a test must be deleted after the run — in `globalTeardown` or a test-level `afterEach`/`afterAll`. Every new test that creates data must also register its cleanup. Never leave test data in the environment between runs.
 - **Test case files** go in `test-cases/<type>/<feature>/` mirroring `tests/<type>/<feature>.spec.ts`. Never place test case `.md` files flat in `test-cases/`.
 
+## Agents
+
+Multi-step workflows that orchestrate skills and spawn subagents. Definitions live in `.claude/agents/`.
+
+| Agent | Invoke when |
+|---|---|
+| [qa-pipeline](.claude/agents/qa-pipeline/README.md) | Run the full test suite and triage all failures end-to-end |
+| [story-to-spec](.claude/agents/story-to-spec/README.md) | Convert a User Story → test cases → Playwright spec in one pass |
+| [locator-health](.claude/agents/locator-health/README.md) | Audit and auto-heal broken locators after a UI change |
+
+### Agent subagents at a glance
+
+```
+qa-pipeline
+  └── failure-triage (subagent, parallel per failure)
+
+story-to-spec
+  ├── tc-author (subagent)
+  ├── coverage-checker (subagent, parallel with tc-author)
+  ├── spec-builder (subagent)
+  └── pom-scaffolder (subagent, parallel with spec-builder)
+
+locator-health
+  └── locator-auditor (subagent, parallel per page object)
+```
+
 ## Dependency chain
 
 ```

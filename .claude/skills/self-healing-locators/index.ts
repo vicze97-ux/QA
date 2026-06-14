@@ -1,1 +1,1 @@
-export { SelfHealingLocator, SelfHealingLocatorBuilder } from './SelfHealingLocator';
+export { SelfHealingLocator } from './SelfHealingLocator';
