@@ -14,6 +14,7 @@ export default defineConfig({
   reporter: [
     ['html', { open: 'never' }],
     ['list'],
+    ['json', { outputFile: 'test-results/results.json' }],
   ],
   use: {
     baseURL: process.env.BASE_URL ?? 'http://localhost:3000',
