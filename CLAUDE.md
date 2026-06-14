@@ -16,6 +16,8 @@ All skills live in `.claude/skills/`. Read and follow them for any matching task
 | [test-case-generator](.claude/skills/test-case-generator/README.md) | Writing, validating, or converting manual test cases |
 | [user-story-to-test-case](.claude/skills/user-story-to-test-case/README.md) | Given a User Story or Acceptance Criteria to convert |
 | [test-case-to-user-story](.claude/skills/test-case-to-user-story/README.md) | Convert existing test cases into a Jira-ready User Story |
+| [test-failure-analyzer](.claude/skills/test-failure-analyzer/README.md) | After any test run with failures — classify bug vs test issue, report why and where |
+| [bug-reporter](.claude/skills/bug-reporter/README.md) | After a bug is confirmed — ask destination (sprint/backlog/subtask) then create in Jira |
 
 ## Project layout
 
@@ -40,6 +42,9 @@ playwright.config.ts
 - **Every new element** gets a `SelfHealingLocator` with at least 2 strategies.
 - **Every new test case** follows `TC-<MODULE>-<NNN>` format with Playwright tags on each step.
 - **After any exploratory testing session**, delete all `*.png` files from the project root before finishing.
+- **On test failure**, always report why and where it failed first, then ask the user what to do next. Never auto-create a bug ticket.
+- **Test data must always be cleaned up.** Any data created by a test must be deleted after the run — in `globalTeardown` or a test-level `afterEach`/`afterAll`. Every new test that creates data must also register its cleanup. Never leave test data in the environment between runs.
+- **Test case files** go in `test-cases/<type>/<feature>/` mirroring `tests/<type>/<feature>.spec.ts`. Never place test case `.md` files flat in `test-cases/`.
 
 ## Dependency chain
 
@@ -51,4 +56,6 @@ visual-self-healing   (standalone, last-resort)
 test-case-generator   (standalone)
 user-story-to-test-case (standalone, doc only)
 test-case-to-user-story (standalone, reverse of user-story-to-test-case)
+test-failure-analyzer   (standalone, runs after any failing test run)
+  └── bug-reporter      (runs after test-failure-analyzer confirms isBug=true)
 ```

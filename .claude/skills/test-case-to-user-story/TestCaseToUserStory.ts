@@ -124,7 +124,10 @@ export class TestCaseToUserStory {
   }
 
   static generateJiraPayload(config: UserStoryConfig): JiraStoryPayload {
-    const summary = `As a ${config.actor}, I can ${config.intent} so that ${config.businessValue}`;
+    // Summary = functionality name (title-cased module), e.g. "Create Functionality"
+    const summary = config.module
+      .replace(/-/g, ' ')
+      .replace(/\b\w/g, c => c.toUpperCase());
 
     const sections: string[] = [
       '## User Story',
