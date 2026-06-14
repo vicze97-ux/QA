@@ -13,7 +13,8 @@ export class LoginPage extends BasePage {
   async login(email: string, password: string) {
     await this.locator('[data-testid="email"]').fill(email);
     await this.locator('[data-testid="password"]').fill(password);
-    await this.locator('[data-testid="submit"]').click();
+    // locator-health: [data-testid="submit"] removed in UI update; button[type="submit"] is structurally stable
+    await this.locator('button[type="submit"]').click();
   }
 
   async expectError(message: string) {
