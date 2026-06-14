@@ -1,0 +1,1 @@
+export { VisualSelfHealing } from './VisualSelfHealing';
